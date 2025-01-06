@@ -40,41 +40,38 @@ export default function RentScreen() {
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
     const navigation = useNavigation();
 
-    const fetchRentedCars = async () => {
-        const token = await AsyncStorage.getItem('@myApp:token');
-        if (!token) {
-            setRentedCars([]);
-            setLoggedIn(false);
-            setLoading(false);
-            return;
-        }
-
-        setLoggedIn(true);
-
-        try {
-            const response = await fetch('https://be-rent-car.vercel.app/rentcars/history', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'token': token,
-                },
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                setRentedCars(result);
-            } else {
-                Alert.alert('Error', result.message || 'Something went wrong!');
-            }
-        } catch (error) {
-            Alert.alert('Error', 'Failed to fetch rented cars.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
+        const fetchRentedCars = async () => {
+            const token = await AsyncStorage.getItem('@myApp:token');
+            if (!token) {
+                setRentedCars([]);
+                setLoggedIn(false);
+                setLoading(false);
+                return;
+            }
+
+            setLoggedIn(true);
+            setLoading(true);
+
+            try {
+                const response = await fetch('https://be-rent-car.vercel.app/rentcars/history', {
+                    headers: { 'token': token },
+                });
+
+                if (!response.ok) {
+                    const result = await response.json();
+                    throw new Error(result.message || 'Something went wrong!');
+                }
+
+                const result = await response.json();
+                setRentedCars(result);
+            } catch (error) {
+                Alert.alert('Error', error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchRentedCars();
     }, []);
 

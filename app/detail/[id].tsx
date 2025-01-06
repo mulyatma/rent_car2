@@ -43,7 +43,7 @@ const CarDetail = () => {
 
     useEffect(() => {
         navigation.setOptions({
-            headerShown: false,  // Menyembunyikan header
+            headerShown: false,
         });
     }, [navigation]);
 
