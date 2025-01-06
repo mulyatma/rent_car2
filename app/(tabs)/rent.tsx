@@ -72,8 +72,12 @@ export default function RentScreen() {
             }
         };
 
-        fetchRentedCars();
-    }, []);
+        // Listener untuk memanggil ulang fetchRentedCars ketika layar difokuskan
+        const unsubscribe = navigation.addListener('focus', fetchRentedCars);
+
+        return unsubscribe; // Bersihkan listener saat komponen tidak aktif
+    }, [navigation]);
+
 
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
