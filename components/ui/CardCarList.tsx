@@ -23,17 +23,25 @@ const CardCarList: React.FC<CardCarListProps> = ({ car }) => {
     // Pindahkan penggunaan useNavigation ke dalam komponen
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
+    const formattedPrice = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0,
+    }).format(Number(car.price));
 
     return (
         <TouchableOpacity style={styles.card} >
             <Link href={{
                 pathname: '/detail/[id]',
                 params: { id: car._id },
-            }}>
+            }}
+                style={styles.link}>
+                <Text style={styles.cardName}>{car.nameCar}</Text>
                 <View style={styles.cardDetails}>
-                    <Text style={styles.cardName}>{car.nameCar}</Text>
                     <View>
-                        <Text style={styles.cardInfo}>{car.description}</Text>
+                        <Image source={{ uri: car.img }} style={styles.cardImage} />
+                    </View>
+                    <View>
                         <View style={styles.infoWrapper}>
                             <View style={styles.info}>
                                 <Icon name="settings" size={20} color="#D3D3D3" />
@@ -54,10 +62,9 @@ const CardCarList: React.FC<CardCarListProps> = ({ car }) => {
                                 </View>
                             )}
                         </View>
-                        <Text style={styles.cardPrice}>Harga: {car.price} /Hari</Text>
+                        <Text style={styles.cardPrice}>Harga: {formattedPrice} /Hari</Text>
                     </View>
                 </View>
-                <Image source={{ uri: car.img }} style={styles.cardImage} />
             </Link>
         </TouchableOpacity>
     );
@@ -69,27 +76,29 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: '#fff',
         marginBottom: 10,
-        padding: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
+        padding: 18,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 3,
         elevation: 5,
     },
+    link: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     cardImage: {
         width: 100,
         height: '80%',
-        borderRadius: 8,
         resizeMode: 'contain',
     },
     cardDetails: {
-        flex: 1,
+        flexDirection: 'row',
         marginLeft: 5,
+        justifyContent: 'space-between',
     },
     cardName: {
-        fontSize: 25,
+        fontSize: 30,
         fontWeight: 'bold',
         color: '#000',
     },
@@ -102,6 +111,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#333',
         marginTop: 5,
+        marginLeft: 12,
     },
     infoWrapper: {
         flexDirection: 'row',
