@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Link } from 'expo-router';
 
 interface CardCarListProps {
     car: {
@@ -22,41 +23,42 @@ const CardCarList: React.FC<CardCarListProps> = ({ car }) => {
     // Pindahkan penggunaan useNavigation ke dalam komponen
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-    // Fungsi untuk navigasi ke halaman detail
-    const handlePress = () => {
-        navigation.navigate('detail', { carId: car._id }); // Arahkan ke screen CarDetail dengan parameter carId
-    };
 
     return (
-        <TouchableOpacity style={styles.card} onPress={handlePress}>
-            <View style={styles.cardDetails}>
-                <Text style={styles.cardName}>{car.nameCar}</Text>
-                <View>
-                    <Text style={styles.cardInfo}>{car.description}</Text>
-                    <View style={styles.infoWrapper}>
-                        <View style={styles.info}>
-                            <Icon name="settings" size={20} color="#D3D3D3" />
-                            <Text style={styles.infoText}>{car.transmission}</Text>
-                        </View>
-                        <View style={styles.info}>
-                            <Icon name="people" size={20} color="#D3D3D3" />
-                            <Text style={styles.infoText}>{car.passenger}</Text>
-                        </View>
-                        <View style={styles.info}>
-                            <Icon name="local-gas-station" size={20} color="#D3D3D3" />
-                            <Text style={styles.infoText}>{car.oil}</Text>
-                        </View>
-                        {car.driver && (
+        <TouchableOpacity style={styles.card} >
+            <Link href={{
+                pathname: '/detail/[id]',
+                params: { id: car._id },
+            }}>
+                <View style={styles.cardDetails}>
+                    <Text style={styles.cardName}>{car.nameCar}</Text>
+                    <View>
+                        <Text style={styles.cardInfo}>{car.description}</Text>
+                        <View style={styles.infoWrapper}>
                             <View style={styles.info}>
-                                <Icon name="person" size={20} color="#32CD32" />
-                                <Text style={styles.infoDriver}> Sopir</Text>
+                                <Icon name="settings" size={20} color="#D3D3D3" />
+                                <Text style={styles.infoText}>{car.transmission}</Text>
                             </View>
-                        )}
+                            <View style={styles.info}>
+                                <Icon name="people" size={20} color="#D3D3D3" />
+                                <Text style={styles.infoText}>{car.passenger}</Text>
+                            </View>
+                            <View style={styles.info}>
+                                <Icon name="local-gas-station" size={20} color="#D3D3D3" />
+                                <Text style={styles.infoText}>{car.oil}</Text>
+                            </View>
+                            {car.driver && (
+                                <View style={styles.info}>
+                                    <Icon name="person" size={20} color="#32CD32" />
+                                    <Text style={styles.infoDriver}> Sopir</Text>
+                                </View>
+                            )}
+                        </View>
+                        <Text style={styles.cardPrice}>Harga: {car.price} /Hari</Text>
                     </View>
-                    <Text style={styles.cardPrice}>Harga: {car.price} /Hari</Text>
                 </View>
-            </View>
-            <Image source={{ uri: car.img }} style={styles.cardImage} />
+                <Image source={{ uri: car.img }} style={styles.cardImage} />
+            </Link>
         </TouchableOpacity>
     );
 };
