@@ -36,12 +36,12 @@ const CardCarList: React.FC<CardCarListProps> = ({ car }) => {
                 params: { id: car._id },
             }}
                 style={styles.link}>
-                <Text style={styles.cardName}>{car.nameCar}</Text>
                 <View style={styles.cardDetails}>
                     <View>
+                        <Text style={styles.cardName}>{car.nameCar}</Text>
                         <Image source={{ uri: car.img }} style={styles.cardImage} />
                     </View>
-                    <View>
+                    <View style={styles.cardInfo}>
                         <View style={styles.infoWrapper}>
                             <View style={styles.info}>
                                 <Icon name="settings" size={20} color="#D3D3D3" />
@@ -72,9 +72,9 @@ const CardCarList: React.FC<CardCarListProps> = ({ car }) => {
 
 const styles = StyleSheet.create({
     card: {
-        flexDirection: 'row',
         borderRadius: 8,
-        backgroundColor: '#fff',
+        backgroundColor: 'white',
+        height: 150,
         marginBottom: 10,
         padding: 18,
         shadowColor: '#000',
@@ -82,10 +82,15 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 3,
         elevation: 5,
+        display: 'flex',
     },
     link: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: 'column',
+    },
+    cardName: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: '#000',
     },
     cardImage: {
         width: 100,
@@ -94,17 +99,7 @@ const styles = StyleSheet.create({
     },
     cardDetails: {
         flexDirection: 'row',
-        marginLeft: 5,
         justifyContent: 'space-between',
-    },
-    cardName: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        color: '#000',
-    },
-    cardInfo: {
-        fontSize: 18,
-        color: '#000',
     },
     cardPrice: {
         fontSize: 16,
@@ -112,6 +107,10 @@ const styles = StyleSheet.create({
         color: '#333',
         marginTop: 5,
         marginLeft: 12,
+    },
+    cardInfo: {
+        alignSelf: 'flex-end',
+        width: '70%',
     },
     infoWrapper: {
         flexDirection: 'row',
@@ -127,7 +126,7 @@ const styles = StyleSheet.create({
     },
     infoText: {
         marginLeft: 5,
-        fontSize: 14,
+        fontSize: 12,
         color: '#D3D3D3',
     },
     infoDriver: {
