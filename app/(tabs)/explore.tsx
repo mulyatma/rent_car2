@@ -1,109 +1,150 @@
-import { StyleSheet, Image, Platform } from 'react-native';
+/* eslint-disable prettier/prettier */
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, FlatList, SafeAreaView, Platform, StatusBar } from 'react-native';
+import { SearchBar } from 'react-native-elements';
+import DropDownPicker from 'react-native-dropdown-picker';
+import CardCarList from '@/components/ui/CardCarList';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-
-export default function TabTwoScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
-  );
+interface Car {
+  _id: string;
+  nameCar: string;
+  description: string;
+  transmission: string;
+  passenger: number;
+  oil: string;
+  driver: boolean;
+  price: string;
+  img: string;
 }
 
+export default function ExploreScreen() {
+  const [search, setSearch] = useState<string>('');
+  const [drive, setDrive] = useState<boolean | null>(null);
+  const [open, setOpen] = useState<boolean>(false);
+  const [value, setValue] = useState<boolean | null>(null);
+  const [items, setItems] = useState<{ label: string; value: boolean | null }[]>([
+    { label: 'Tanpa Sopir', value: false },
+    { label: 'Dengan Sopir', value: true },
+    { label: 'Tampilkan semua', value: null },
+  ]);
+  const [cars, setCars] = useState<Car[]>([]);
+
+  const updateSearch = (search: string): void => {
+    setSearch(search);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const url =
+          drive !== null
+            ? `https://be-rent-car.vercel.app/cars?driver=${drive}&nameCar=${search}`
+            : `https://be-rent-car.vercel.app/cars?&nameCar=${search}`;
+        const response = await fetch(url);
+        const data: Car[] = await response.json();
+        setCars(data);
+      } catch (error) {
+        console.error('Error fetching cars:', error);
+      }
+    };
+
+    fetchData();
+  }, [drive, search]);
+
+  return (
+    <SafeAreaView style={styles.safeAreaContainer}>
+      <View style={styles.container}>
+        <View style={styles.searchContainer}>
+          <SearchBar
+            placeholder="Search..."
+            onChangeText={updateSearch}
+            value={search}
+            containerStyle={styles.searchBarContainer}
+            inputContainerStyle={styles.searchInputContainer}
+            inputStyle={styles.searchInput}
+          />
+          <DropDownPicker
+            open={open}
+            placeholder="Sopir"
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+            onChangeValue={(value) => setDrive(value)}
+            containerStyle={styles.dropdownContainer}
+            style={styles.dropdown}
+            dropDownStyle={styles.dropdown}
+            textStyle={styles.dropdownText}
+            labelStyle={styles.dropdownLabel}
+            showArrowIcon={false}
+            itemSeparator={true}
+            placeholderStyle={{ fontWeight: 'bold' }}
+          />
+        </View>
+        <FlatList
+          data={cars}
+          renderItem={({ item }) => <CardCarList car={item} />}
+          keyExtractor={(item) => item._id}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.cartContainer}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
+
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  safeAreaContainer: {
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    flex: 1,
+    backgroundColor: '#fff',
   },
-  titleContainer: {
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: 10,
+  },
+  searchContainer: {
     flexDirection: 'row',
-    gap: 8,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 10,
+    marginBottom: 16,
+  },
+  searchBarContainer: {
+    backgroundColor: 'transparent',
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    flex: 1,
+  },
+  searchInputContainer: {
+    backgroundColor: '#e0e0e0',
+    borderRadius: 10,
+  },
+  searchInput: {
+    color: '#000',
+  },
+  dropdownContainer: {
+    width: 90,
+    marginLeft: 10,
+  },
+  dropdown: {
+    backgroundColor: '#e0e0e0',
+    borderRadius: 8,
+    borderWidth: 0,
+    maxHeight: 200,
+  },
+  dropdownText: {
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  dropdownLabel: {
+    fontSize: 14,
+    color: '#000',
+  },
+  cartContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 5,
   },
 });
