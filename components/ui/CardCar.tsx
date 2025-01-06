@@ -23,41 +23,45 @@ interface CarCardProps {
 }
 
 const CarCard: React.FC<CarCardProps> = ({ car }) => {
-    const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-    // Fungsi untuk navigasi ke halaman detail
-    const handlePress = () => {
-        navigation.navigate('detail', { carId: car._id }); // Arahkan ke screen CarDetail dengan parameter carId
-    };
+    const formattedPrice = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0,
+    }).format(Number(car.price));
+
     return (
         <TouchableOpacity style={styles.card} key={car._id}>
             <Link href={{
                 pathname: '/detail/[id]',
                 params: { id: car._id },
-            }}>
+            }}
+                style={styles.link}>
                 <Image source={{ uri: car.img }} style={styles.image} />
-                <Text style={styles.name}>{car.nameCar}</Text>
-                <View style={styles.infoContainer}>
-                    <View style={styles.info}>
-                        <Icon name="settings" size={20} color="#D3D3D3" />
-                        <Text style={styles.infoText}>{car.transmission}</Text>
-                    </View>
-                    <View style={styles.info}>
-                        <Icon name="people" size={20} color="#D3D3D3" />
-                        <Text style={styles.infoText}>{car.passenger}</Text>
-                    </View>
-                    <View style={styles.info}>
-                        <Icon name="local-gas-station" size={20} color="#D3D3D3" />
-                        <Text style={styles.infoText}>{car.oil}</Text>
-                    </View>
-                    {car.driver && (
+                <View style={styles.cardDetails}>
+                    <Text style={styles.name}>{car.nameCar}</Text>
+                    <View style={styles.infoContainer}>
                         <View style={styles.info}>
-                            <Icon name="person" size={20} color="#32CD32" />
-                            <Text style={styles.infoDriver}>Sopir</Text>
+                            <Icon name="settings" size={20} color="#D3D3D3" />
+                            <Text style={styles.infoText}>{car.transmission}</Text>
                         </View>
-                    )}
+                        <View style={styles.info}>
+                            <Icon name="people" size={20} color="#D3D3D3" />
+                            <Text style={styles.infoText}>{car.passenger}</Text>
+                        </View>
+                        <View style={styles.info}>
+                            <Icon name="local-gas-station" size={20} color="#D3D3D3" />
+                            <Text style={styles.infoText}>{car.oil}</Text>
+                        </View>
+                        {car.driver && (
+                            <View style={styles.info}>
+                                <Icon name="person" size={20} color="#32CD32" />
+                                <Text style={styles.infoDriver}>Sopir</Text>
+                            </View>
+                        )}
+                    </View>
+                    <Text style={styles.price}>{` ${formattedPrice} /Hari`}</Text>
                 </View>
-                <Text style={styles.price}>{`Rp ${car.price} /Hari`}</Text>
             </Link>
         </TouchableOpacity>
     );
@@ -66,7 +70,6 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
 const styles = StyleSheet.create({
     card: {
         width: 200,
-        height: 280,
         marginRight: 15,
         borderRadius: 10,
         overflow: 'hidden',
@@ -78,10 +81,19 @@ const styles = StyleSheet.create({
         elevation: 5,
         marginBottom: 15,
     },
+    link: {
+        flexDirection: 'row',
+        gap: 10,
+        paddingHorizontal: 5
+    },
+    cardDetails: {
+        paddingBottom: 20
+    },
     image: {
         width: '100%',
         height: 150,
         resizeMode: 'contain',
+        marginBottom: 10,
     },
     name: {
         paddingHorizontal: 10,
