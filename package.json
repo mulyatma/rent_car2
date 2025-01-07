@@ -19,6 +19,8 @@
       "!**/coverage/**",
       "!**/node_modules/**",
       "!**/babel.config.js",
+      "!**/components/ui/TabBarBackground.tsx",
+      "!**/components/ui/IconSymbol.tsx",
       "!**/expo-env.d.ts",
       "!**/jest.setup.ts",
       "!**/scripts/**",
