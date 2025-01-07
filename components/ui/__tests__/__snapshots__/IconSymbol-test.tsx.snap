@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IconSymbol Component renders correctly with default props 1`] = `
+<ViewManagerAdapter_SymbolModule
+  animated={false}
+  colors={[]}
+  name="house.fill"
+  resizeMode="scaleAspectFit"
+  style={
+    [
+      {
+        "height": 24,
+        "width": 24,
+      },
+      [
+        {
+          "height": 24,
+          "width": 24,
+        },
+        undefined,
+      ],
+    ]
+  }
+  tintColor="black"
+  type="monochrome"
+  weight="regular"
+/>
+`;

@@ -91,10 +91,11 @@ const styles = StyleSheet.create({
         width: 100,
         height: '80%',
         resizeMode: 'contain',
+        marginLeft: -100,
     },
     cardDetails: {
         flexDirection: 'row',
-        marginLeft: 5,
+        alignItems: 'center',
         justifyContent: 'space-between',
     },
     cardName: {
