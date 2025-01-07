@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<Text
+  href="https://example.com"
+  onPress={[Function]}
+  role="link"
+>
+  Snapshot test!
+</Text>
+`;

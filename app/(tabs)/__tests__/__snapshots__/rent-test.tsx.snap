@@ -1,0 +1,115 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RentScreen should match snapshot 1`] = `
+<RCTSafeAreaView
+  style={
+    {
+      "backgroundColor": "#fff",
+      "flex": 1,
+      "paddingTop": 0,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "#fff",
+        "flex": 1,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#000",
+          "fontSize": 24,
+          "fontWeight": "bold",
+          "padding": 20,
+        }
+      }
+    >
+      Mobil Sedang Disewa
+    </Text>
+    <ActivityIndicator
+      color="#0000ff"
+      size="large"
+    />
+  </View>
+</RCTSafeAreaView>
+`;
+
+exports[`RentScreen should match snapshot when loading rented cars 1`] = `
+<RCTSafeAreaView
+  style={
+    {
+      "backgroundColor": "#fff",
+      "flex": 1,
+      "paddingTop": 0,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "#fff",
+        "flex": 1,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#000",
+          "fontSize": 24,
+          "fontWeight": "bold",
+          "padding": 20,
+        }
+      }
+    >
+      Mobil Sedang Disewa
+    </Text>
+    <ActivityIndicator
+      color="#0000ff"
+      size="large"
+    />
+  </View>
+</RCTSafeAreaView>
+`;
+
+exports[`RentScreen should match snapshot when there are no rented cars 1`] = `
+<RCTSafeAreaView
+  style={
+    {
+      "backgroundColor": "#fff",
+      "flex": 1,
+      "paddingTop": 0,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "#fff",
+        "flex": 1,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#000",
+          "fontSize": 24,
+          "fontWeight": "bold",
+          "padding": 20,
+        }
+      }
+    >
+      Mobil Sedang Disewa
+    </Text>
+    <ActivityIndicator
+      color="#0000ff"
+      size="large"
+    />
+  </View>
+</RCTSafeAreaView>
+`;

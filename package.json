@@ -12,7 +12,26 @@
     "lint": "expo lint"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.{ts,tsx,js,jsx}",
+      "!**/coverage/**",
+      "!**/node_modules/**",
+      "!**/babel.config.js",
+      "!**/components/ui/TabBarBackground.tsx",
+      "!**/components/ui/IconSymbol.tsx",
+      "!**/expo-env.d.ts",
+      "!**/jest.setup.ts",
+      "!**/scripts/**",
+      "!**/hooks/**",
+      "!**/.expo/**",
+      "!**/jest.config.js",
+      "!**/jest.setup.js",
+      "!**/jest.teardown.js",
+      "!**/types/**",
+      "!**/types.ts"
+    ]
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
@@ -51,12 +70,14 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@testing-library/react-native": "^13.0.0",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.3.12",
     "@types/react-native-datepicker": "^1.7.6",
     "@types/react-test-renderer": "^18.3.0",
-    "jest": "^29.2.1",
+    "jest": "^29.7.0",
     "jest-expo": "~52.0.2",
+    "jest-fetch-mock": "^3.0.3",
     "react-test-renderer": "18.3.1",
     "typescript": "^5.3.3"
   },
