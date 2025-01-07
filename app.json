@@ -15,7 +15,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.rent_car2",
+      "googleServicesFile": "./android/app/google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -24,6 +26,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-build-properties",
       [
         "expo-splash-screen",
         {
@@ -36,6 +39,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "067f24a9-9591-4e38-bc2e-c937cea94bb3"
+      }
     }
   }
 }

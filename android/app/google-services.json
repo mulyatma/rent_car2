@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "571224008968",
+    "project_id": "rent-carv2",
+    "storage_bucket": "rent-carv2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571224008968:android:56fb0d63a96d68de9764bd",
+        "android_client_info": {
+          "package_name": "com.anonymous.rent_car2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571224008968-gkk72ui0tcu73trteivepk4dra8jl9uu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASBYlhRkanv7AkNhYb2kNgVFPOoXcvP_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571224008968-gkk72ui0tcu73trteivepk4dra8jl9uu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
