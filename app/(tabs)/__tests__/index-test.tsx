@@ -1,106 +1,102 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import HomeScreen from '../index';
+import HomeScreen from '@/app/(tabs)/index'; // Adjust the import path
+import { useNavigation } from '@react-navigation/native';
 
-// Mock dependencies
 jest.mock('@react-navigation/native', () => ({
-  useNavigation: () => ({
-    navigate: jest.fn(),
-  }),
+  useNavigation: jest.fn(),
 }));
 
-jest.mock('react-native-elements', () => ({
-  SearchBar: ({ onChangeText, value }: { onChangeText: (text: string) => void; value: string }) => (
-    <input
-      data-testid="search-bar"
-      type="text"
-      onChange={(e) => onChangeText(e.target.value)}
-      value={value}
-    />
-  ),
+jest.mock('@/components/ui/CardCar', () => ({
+  __esModule: true,
+  default: jest.fn(() => <div>CarCard</div>),
 }));
 
-jest.mock('@/components/ui/CardCar', () => {
-  return ({ car }: { car: any }) => <div data-testid="car-card">{car.nameCar}</div>;
-});
-
-jest.mock('react-native-safe-area-context', () => ({
-  useSafeAreaInsets: jest.fn(() => ({ bottom: 10 })),
+jest.mock('@react-native-async-storage/async-storage', () => ({
+  setItem: jest.fn(),
+  getItem: jest.fn(),
+  removeItem: jest.fn(),
 }));
 
-jest.mock('@react-navigation/bottom-tabs', () => ({
-  useBottomTabBarHeight: jest.fn(() => 50),
-}));
-
-jest.mock('react-native', () => {
-  const rn = jest.requireActual('react-native');
-  rn.FlatList = jest.fn(({ data, renderItem }: any) =>
-    data.map((item: any, index: number) => renderItem({ item, index }))
-  );
-  return rn;
-});
-
-// Mock AsyncStorage
-beforeEach(() => {
-  AsyncStorage.getItem = jest.fn((key) => {
-    if (key === '@myApp:name') return Promise.resolve('John Doe');
-    if (key === '@myApp:token') return Promise.resolve('test-token');
-    return Promise.resolve(null);
-  });
-  AsyncStorage.removeItem = jest.fn(() => Promise.resolve());
-});
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () =>
+      Promise.resolve([
+        { _id: '1', nameCar: 'Car A', img: '', price: 100 },
+        { _id: '2', nameCar: 'Car B', img: '', price: 200 },
+      ]),
+  })
+) as jest.Mock;
 
 describe('HomeScreen', () => {
-  it('renders correctly with default values', async () => {
-    const { getByText, getByTestId } = render(<HomeScreen />);
+  const navigateMock = jest.fn();
 
-    // Wait for useEffect to complete
-    await waitFor(() => {
-      expect(getByText('Hai!! John Doe')).toBeTruthy();
-      expect(getByTestId('search-bar')).toBeTruthy();
-    });
+  beforeEach(() => {
+    (useNavigation as jest.Mock).mockReturnValue({ navigate: navigateMock });
+    jest.clearAllMocks();
   });
 
-  it('handles search input correctly', () => {
-    const { getByTestId } = render(<HomeScreen />);
-    const searchBar = getByTestId('search-bar');
+  it('renders correctly with default state', () => {
+    const { getByText, getByPlaceholderText } = render(<HomeScreen />);
 
-    fireEvent.changeText(searchBar, 'Sedan');
-    expect(searchBar.props.value).toBe('Sedan');
+    expect(getByText('Hai!! User')).toBeTruthy();
+    expect(getByPlaceholderText('Cari Mobil')).toBeTruthy();
   });
 
-  it('renders car cards correctly', async () => {
-    const mockCars = [
-      { _id: '1', nameCar: 'Car 1', img: '', transmission: '', passenger: 4, oil: '', price: 100 },
-      { _id: '2', nameCar: 'Car 2', img: '', transmission: '', passenger: 4, oil: '', price: 200 },
-    ];
+  it('fetches and displays car data', async () => {
+    const { getByText, findAllByText } = render(<HomeScreen />);
 
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(mockCars),
-      })
-    ) as jest.Mock;
-
-    const { getAllByTestId } = render(<HomeScreen />);
-
-    await waitFor(() => {
-      const carCards = getAllByTestId('car-card');
-      expect(carCards).toHaveLength(2);
-      expect(carCards[0].textContent).toBe('Car 1');
-      expect(carCards[1].textContent).toBe('Car 2');
-    });
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    const carCards = await findAllByText('CarCard');
+    expect(carCards.length).toBe(2); // Matches mocked car data length
   });
 
-  it('handles logout correctly', async () => {
+  it('handles login navigation', () => {
     const { getByText } = render(<HomeScreen />);
-    const logoutButton = getByText('Logout');
 
-    fireEvent.press(logoutButton);
+    const loginButton = getByText('Login');
+    fireEvent.press(loginButton);
+
+    expect(navigateMock).toHaveBeenCalledWith('login');
+  });
+
+  it('opens and closes logout modal', () => {
+    const { getByText, queryByText } = render(<HomeScreen />);
+
+    fireEvent.press(getByText('Login')); // Open login to mock token
+    fireEvent.press(getByText('User')); // Open modal
+
+    expect(getByText('Yakin ingin keluar?')).toBeTruthy();
+
+    fireEvent.press(getByText('Cancel'));
+    expect(queryByText('Yakin ingin keluar?')).toBeNull();
+  });
+
+  it('logs out correctly', async () => {
+    const { getByText } = render(<HomeScreen />);
+
+    fireEvent.press(getByText('Login')); // Open login to mock token
+    fireEvent.press(getByText('User')); // Open modal
+
+    fireEvent.press(getByText('Logout'));
 
     await waitFor(() => {
       expect(AsyncStorage.removeItem).toHaveBeenCalledWith('@myApp:name');
       expect(AsyncStorage.removeItem).toHaveBeenCalledWith('@myApp:token');
     });
+
+    expect(navigateMock).toHaveBeenCalledWith('login');
+  });
+
+  it('filters car results based on search', async () => {
+    const { getByPlaceholderText, findAllByText } = render(<HomeScreen />);
+
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    const searchInput = getByPlaceholderText('Cari Mobil');
+
+    fireEvent.changeText(searchInput, 'Car A');
+    const filteredCars = await findAllByText('CarCard');
+    expect(filteredCars.length).toBe(1); // Matches filtered result
   });
 });
