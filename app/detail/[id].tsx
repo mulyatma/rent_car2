@@ -22,18 +22,6 @@ interface Car {
     about: string;
 }
 
-const car: Car = {
-    _id: 'some_id',
-    img: 'some_img',
-    nameCar: 'some_name',
-    transmission: 'some_transmission',
-    passenger: 4,
-    oil: 'some_oil',
-    driver: true,
-    price: 100,
-    about: 'some_about',
-};
-
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
@@ -42,7 +30,7 @@ Notifications.setNotificationHandler({
     }),
 });
 
-async function sendPushNotification(expoPushToken: string) {
+async function sendPushNotification(expoPushToken: string, car: Car) {
     const message = {
         to: expoPushToken,
         sound: 'default',
@@ -228,7 +216,7 @@ export default function App() {
 
             if (response.ok) {
                 Alert.alert('Sukses', 'Berhasil Menyewa Mobil!');
-                sendPushNotification(expoPushToken);
+                sendPushNotification(expoPushToken, car);
             } else {
                 Alert.alert('Error', result.message || 'Something went wrong!');
             }
