@@ -20,7 +20,15 @@
       "!**/node_modules/**",
       "!**/babel.config.js",
       "!**/expo-env.d.ts",
-      "!**/.expo/**"
+      "!**/jest.setup.ts",
+      "!**/scripts/**",
+      "!**/hooks/**",
+      "!**/.expo/**",
+      "!**/jest.config.js",
+      "!**/jest.setup.js",
+      "!**/jest.teardown.js",
+      "!**/types/**",
+      "!**/types.ts"
     ]
   },
   "dependencies": {
